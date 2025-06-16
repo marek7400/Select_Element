@@ -3,4 +3,4 @@ Select element on page, show info class ID root, hide element, copy selector to 
 <br>
 <br>
 <br>
-![select](images/select.png)
+![select](images/select2.png)
