@@ -1,7 +1,6 @@
 # Select Element - Chrome extension.
 Select element on page, show info class ID root, hide element, copy selector to clipboard.
 
-(not work on some pages ex. Google Maps)
 <br>
 <br>
 <br>
