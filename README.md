@@ -26,6 +26,10 @@ v2.2
 
 -option to freeze the menu
 
+v2.3
+
+FIX working on some pages. (ex. Google Maps)
+
 ![2.2](images/2.2.png)
 
 # The “Freeze” feature 
