@@ -6,14 +6,14 @@ Select element on page, show info class ID root, hide element, copy selector to 
 
 ![select](images/select2.png)
 
-v2.1 
+### v2.1 
 
 add "Short" option.
 
 
 ![2.1](images/2.1.png)
 
-v2.2 
+### v2.2 
 
 -more precise selection. 
 
@@ -25,9 +25,9 @@ v2.2
 
 -option to freeze the menu
 
-v2.3
+# v2.3
 
-FIX working on some pages. (ex. Google Maps)
+### FIX working on some pages. (ex. Google Maps)
 
 ![2.2](images/2.2.png)
 
