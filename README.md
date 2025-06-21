@@ -12,7 +12,13 @@ v2.1 add "Short" option.
 
 ![2.1](images/2.1.png)
 
-v2.2 More precise selection. Option to select individual or similar elements, multi-level undo hiding, moving through the element tree with sliders. Option to freeze the menu.
+v2.2 
+-more precise selection. 
+-option to select individual or similar elements, 
+-multi-level undo hiding, 
+-moving through the element tree with sliders. 
+-option to freeze the menu.
+
 ![2.2](images/2.2.png)
 
 # The “Freeze” feature 
