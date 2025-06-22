@@ -37,7 +37,7 @@ add "Short" option.
 
 fix on some pages with wrong html menu (non-standard)
 
-
+old info (soon will be update)
 # The “Freeze” feature 
 was designed to solve one specific problem: maintaining the visibility of elements that are dynamically hidden by JavaScript in response to a change in the mouse cursor position or loss of focus by the element.
 What elements and behaviors can “Freeze” freeze?
