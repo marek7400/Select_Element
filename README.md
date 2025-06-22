@@ -31,6 +31,10 @@ add "Short" option.
 
 ![2.2](images/2.2.png)
 
+# 2.4 change in the method of operation/selection of sliders
+
+2 methon block menu: JS (default) and if press "z" key (CSS menu).
+
 # The “Freeze” feature 
 was designed to solve one specific problem: maintaining the visibility of elements that are dynamically hidden by JavaScript in response to a change in the mouse cursor position or loss of focus by the element.
 What elements and behaviors can “Freeze” freeze?
