@@ -33,7 +33,10 @@ add "Short" option.
 
 # 2.4 change in the method of operation/selection of sliders
 
-2 methon block menu: JS (default) and if press "z" key (CSS menu).
+2 method block menu: JS (default) and CSS menu.
+
+fix on some pages with wrong html menu (non-standard)
+
 
 # The “Freeze” feature 
 was designed to solve one specific problem: maintaining the visibility of elements that are dynamically hidden by JavaScript in response to a change in the mouse cursor position or loss of focus by the element.
