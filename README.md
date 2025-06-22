@@ -37,70 +37,185 @@ add "Short" option.
 
 fix on some pages with wrong html menu (non-standard)
 
-old info (soon will be update)
-# The “Freeze” feature 
-was designed to solve one specific problem: maintaining the visibility of elements that are dynamically hidden by JavaScript in response to a change in the mouse cursor position or loss of focus by the element.
-What elements and behaviors can “Freeze” freeze?
-The main target is interactive interface elements that appear only briefly. “Freeze” will effectively block the mechanisms that hide them.
-1. Dropdown/flyout menus:
-Scenario: You hover over the “Products” menu item, and a list of categories appears. As soon as you move the cursor away from “Products” or the expanded list, the menu disappears.
-How “Freeze” works: After enabling “Freeze” and expanding the menu, you can freely move your cursor away from it, and it will remain visible, allowing you to select any link from the list using the pipette.
-2. Tooltips:
-Scenario: You hover over the icon (?) to see a tooltip, which disappears when you move the cursor away.
-“Freeze” action: “Freezes” the tooltip in a visible state, allowing you to analyze its content or structure.
-3. Dynamic suggestion lists in search fields:
-Scenario: You click on the search field and a list of popular phrases or search history appears. The list disappears as soon as you click anywhere else on the page (which causes a blur event on the search field).
-Freeze action: Blocks the blur event so that the list of suggestions remains visible even after clicking outside the search field.
-4. Any element whose disappearance is associated with mouseout, mouseleave, blur, or focusout events:
-This is a technical generalization of the above points. If a website uses JavaScript to listen for these specific events in order to hide an element (e.g., by changing its display style to none or adding a hiding class), “Freeze” will effectively block it.
-What can “Freeze” NOT freeze?
-It is important to understand the limitations of this feature. It is not a universal tool for stopping all dynamic changes on a page.
-1. Elements hidden by the click event:
-Scenario: You have an accordion-type menu. Clicking on the header expands the content, and clicking again collapses it.
-Limitation: “Freeze” intentionally does not block click events, as this would prevent any interaction with the page, including the expansion of the menu itself.
-2. Elements closed by a timer (setTimeout):
-Scenario: A “toast” message appears on the page (e.g., “Product added to cart”) and automatically disappears after 3 seconds.
-Limitation: The “Freeze” function does not pause or block JavaScript timers. The message will disappear according to the programmed time.
-3. Elements hidden by events other than those blocked:
-Scenario: A modal window (pop-up) closes when the user starts scrolling the page (scroll event).
-Limitation: “Freeze” only blocks 4 specific events. If the page uses others, such as scroll, resize, or keydown, to hide elements, they will not be blocked.
-4. Visual effects based solely on CSS (:hover):
-Scenario: The color of a button changes when you hover over it with the mouse, thanks to the CSS rule: button:hover { background-color: red; }.
-Limitation: :hover effects are handled directly by the browser's rendering engine, not by JavaScript. “Freeze” works at the JavaScript event level, so it has no effect on pure CSS pseudo-classes. The button color will still return to normal when you move the cursor away from it.
-Technical summary: How does it work?
-“Freeze” works by adding global event listeners in the capture phase (capture: true). This means that it intercepts mouseout, mouseleave, blur, and focusout events at the very top of the DOM tree before they reach their target elements. It then immediately calls the event.stopPropagation() method on them, which effectively prevents them from being further processed by the page's scripts.
-Golden rule: If something on the page disappears when you move the mouse away from it or click next to it, “Freeze” has a good chance of “freezing” it.
+***********
 
-*********
-# Funkcja "Freeze" 
-została zaprojektowana, aby rozwiązać jeden, konkretny problem: utrzymanie widoczności elementów, które są dynamicznie ukrywane przez JavaScript w odpowiedzi na zmianę pozycji kursora myszy lub utratę fokusu przez element.
-Jakie elementy i zachowania "Freeze" może zamrozić?
-Głównym celem są interaktywne elementy interfejsu, które pojawiają się tylko na chwilę. "Freeze" skutecznie zablokuje mechanizmy ich ukrywania.
-1. Rozwijane menu nawigacyjne (Dropdown / Flyout Menus):
-Scenariusz: Najeżdżasz kursorem na pozycję menu "Produkty", pojawia się lista kategorii. Gdy tylko zjedziesz kursorem z "Produktów" lub z rozwiniętej listy, menu znika.
-Działanie "Freeze": Po włączeniu "Freeze" i rozwinięciu menu, możesz swobodnie zjechać z niego kursorem, a ono pozostanie widoczne, pozwalając na wybranie dowolnego linku z listy za pomocą pipety.
-2. Dymki z podpowiedziami (Tooltips):
-Scenariusz: Najeżdżasz na ikonę (?), aby zobaczyć podpowiedź, która znika, gdy odsuniesz kursor.
-Działanie "Freeze": "Zamrozi" dymek w stanie widocznym, umożliwiając analizę jego treści lub struktury.
-3. Dynamiczne listy sugestii w polach wyszukiwania:
-Scenariusz: Klikasz w pole wyszukiwania i pojawia się lista popularnych fraz lub historii wyszukiwania. Lista znika, gdy tylko klikniesz gdziekolwiek indziej na stronie (co powoduje zdarzenie blur na polu wyszukiwania).
-Działanie "Freeze": Zablokuje zdarzenie blur, dzięki czemu lista sugestii pozostanie widoczna nawet po kliknięciu poza polem wyszukiwania.
-4. Dowolny element, którego zniknięcie jest powiązane ze zdarzeniami mouseout, mouseleave, blur lub focusout:
-Jest to techniczne uogólnienie powyższych punktów. Jeśli strona internetowa używa JavaScriptu do nasłuchiwania na te konkretne zdarzenia w celu ukrycia jakiegoś elementu (np. poprzez zmianę jego stylu display na none lub dodanie klasy ukrywającej), "Freeze" skutecznie to zablokuje.
-Czego "Freeze" NIE może zamrozić?
-Ważne jest, aby rozumieć ograniczenia tej funkcji. Nie jest to uniwersalne narzędzie do zatrzymywania wszystkich dynamicznych zmian na stronie.
-1. Elementy ukrywane przez zdarzenie click:
-Scenariusz: Masz menu typu akordeon. Kliknięcie na nagłówek rozwija treść, a ponowne kliknięcie ją zwija.
-Ograniczenie: "Freeze" celowo nie blokuje zdarzeń click, ponieważ uniemożliwiłoby to jakąkolwiek interakcję ze stroną, w tym samo rozwinięcie menu.
-2. Elementy zamykane przez timer (setTimeout):
-Scenariusz: Na stronie pojawia się komunikat "toast" (np. "Produkt dodany do koszyka"), który automatycznie znika po 3 sekundach.
-Ograniczenie: Funkcja "Freeze" nie wstrzymuje ani nie blokuje działania timerów JavaScript. Komunikat zniknie zgodnie z zaprogramowanym czasem.
-3. Elementy ukrywane przez zdarzenia inne niż te blokowane:
-Scenariusz: Okno modalne (pop-up) zamyka się, gdy użytkownik zaczyna przewijać stronę (zdarzenie scroll).
-Ograniczenie: "Freeze" blokuje tylko 4 konkretne zdarzenia. Jeśli strona używa innych, np. scroll, resize czy keydown, do ukrywania elementów, nie zostaną one zablokowane.
-4. Efekty wizualne oparte wyłącznie na CSS (:hover):
-Scenariusz: Kolor przycisku zmienia się, gdy najedziesz na niego myszą, dzięki regule CSS: button:hover { background-color: red; }.
-Ograniczenie: Efekty :hover są obsługiwane bezpośrednio przez silnik renderujący przeglądarki, a nie przez JavaScript. "Freeze" działa na poziomie zdarzeń JavaScript, więc nie ma wpływu na czyste pseudoklasy CSS. Kolor przycisku nadal wróci do normy po zjechaniu z niego kursorem.
-Podsumowanie techniczne: Jak to działa?
-"Freeze" działa poprzez dodanie globalnych nasłuchiwaczy zdarzeń w fazie przechwytywania (capture: true). Oznacza to, że przechwytuje zdarzenia mouseout, mouseleave, blur i focusout na samym szczycie drzewa DOM, zanim dotrą one do docelowych elementów. Następnie natychmiast wywołuje na nich metodę event.stopPropagation(), co skutecznie uniemożliwia ich dalsze przetwarzanie przez skrypty strony.
-Złota zasada: Jeśli coś na stronie znika, gdy zjeżdżasz z tego myszą lub klikasz obok, "Freeze" ma dużą szansę to "zamrozić".
+# Element Picker Extension
+
+An advanced Chrome extension for selecting elements, generating robust CSS selectors, and interacting with complex web pages, including those with iframes and dynamic, JavaScript-driven menus.
+
+## Key Features
+
+-   **Interactive Selector Generator:** Click on any element to generate a precise CSS selector.
+-   **Full Iframe Support:** Works seamlessly across all `<iframe>` elements on a page.
+-   **Interactive Controls:** Fine-tune selectors using intuitive sliders and checkboxes.
+-   **Multiple Selector Modes:**
+    -   **Similar Mode:** Generates flexible selectors based on tags, classes, and IDs.
+    -   **Short Mode:** Creates a concise selector for only the last element in the path.
+    -   **Single Mode:** Generates precise, index-based selectors (`:nth-of-type`) for navigating lists and complex structures.
+-   **Advanced Freeze Functionality:** Two distinct modes to handle dynamic elements.
+-   **Color Customization:** Change the highlight and selection colors to your preference.
+-   **Element Hiding:** Temporarily hide elements on the page to refine your view.
+
+---
+
+## How to Use
+
+1.  Click the extension icon in the Chrome toolbar to activate the picker. Your cursor will change to a crosshair.
+2.  Move your mouse over the page. Elements under the cursor will be highlighted.
+3.  Click on the desired element to select it.
+4.  The control panel will appear. Use the sliders and checkboxes to adjust the generated selector.
+5.  Use the action buttons (`COPY`, `HIDE`, etc.) to perform the desired operation.
+6.  Click `SELECT` to re-enter picking mode or `QUIT` (or press `Esc`) to close the extension.
+
+---
+
+## Panel and Modes Explained
+
+### Top Bar
+
+-   **Color Swatches:** The first (blue) swatch changes the hover color, while the second (red) changes the selection color.
+-   **❄️ Freeze Button:** Toggles the **JS Freeze** mode.
+-   **Minimize/Quit:** Minimizes the panel or closes the extension.
+
+### Selector Display
+
+-   Shows the currently generated filter-ready selector (e.g., `##selector`).
+-   This field is `contenteditable`, so you can manually type or paste a selector to see it highlighted on the page.
+
+### Sliders
+
+-   **Top Slider (Path Slider):** Controls the selector's depth. Moving it to the left goes up the DOM tree (selects parent elements).
+-   **Bottom Slider (Attribute/Index Slider):** Its function changes depending on the mode:
+    -   In **Similar Mode**, it adjusts the specificity of the selector parts (e.g., from just `tag` to `tag.class` or `#id`).
+    -   In **Single Mode**, it directly changes the `:nth-of-type(n)` index of the element currently targeted by the Path Slider.
+
+### Checkboxes and Modes
+
+-   **`Similar` (checkbox):**
+    -   When **checked**, it generates flexible, attribute-based selectors. This mode is great for finding multiple elements that share similar characteristics.
+-   **`Short` (checkbox):**
+    -   Only works when `Similar` is checked.
+    -   When **checked**, it simplifies the selector to only target the last element in the current path, instead of the full parent-child chain.
+-   **`Single Mode` (`Similar` checkbox unchecked):**
+    -   This mode generates highly specific, index-based selectors (`tag:nth-of-type(n)`).
+    -   It is designed for precision, especially when dealing with lists or sibling elements that lack unique classes or IDs (or have duplicated IDs).
+    -   The sliders allow you to navigate the DOM tree precisely, level by level and index by index.
+
+---
+
+## The Freeze Function Explained
+
+The extension offers two distinct "freeze" modes to handle dynamic elements that appear or disappear on user interaction. Only one mode can be active at a time.
+
+### 1. CSS Freeze (via 'z' key)
+
+-   **Purpose:** To lock the visual state of elements that appear on CSS `:hover`, such as dropdown menus.
+-   **How it works:** When you hover over an element that triggers a menu to appear (e.g., an `<li>` that shows a `<ul>`), pressing the **'z'** key will "freeze" that menu. The extension does this by getting the menu's `computedStyle` (its exact size, position, and display properties at that moment) and applying it as an inline style. This keeps the menu visible even after you move your cursor away.
+-   **How to use:**
+    1.  Hover over the element that makes the menu appear.
+    2.  Once the menu is visible, press the **'z'** key.
+    3.  The menu is now frozen, and you can interact with its items.
+    4.  Pressing **'z'** again will unfreeze the menu and clear the current selection.
+-   **Limitations:** This method is most effective for menus controlled by CSS. It may not correctly freeze elements animated by very complex JavaScript that continuously alters transform or position properties, as it only captures a single snapshot of the element's style.
+
+### 2. JS Freeze (via ❄️ icon)
+
+-   **Purpose:** To block JavaScript events that cause elements to disappear, such as `mouseout` or `mouseleave` listeners.
+-   **How it works:** When activated, this mode adds global event listeners that capture and stop the propagation of key mouse events (`mouseout`, `mouseleave`, `blur`, etc.). This prevents the page's scripts from detecting that you have moved the mouse away, thus keeping the dynamic element visible.
+-   **How to use:**
+    1.  Click the **❄️** icon on the panel. The icon will become active.
+    2.  Hover over the element to make the dynamic menu/element appear. It should now remain visible.
+    3.  Click the **❄️** icon again to disable the event listeners and clear the current selection.
+-   **Limitations:** This mode is powerful but can be disruptive. By blocking events globally, it may interfere with other functionalities on the page while active. Use it when the CSS freeze ('z' key) is not sufficient.
+
+---
+---
+
+# Rozszerzenie Element Picker
+
+Zaawansowane rozszerzenie do przeglądarki Chrome służące do zaznaczania elementów, generowania solidnych selektorów CSS i interakcji ze złożonymi stronami internetowymi, w tym z elementami `<iframe>` oraz dynamicznymi menu opartymi na JavaScript.
+
+## Główne Funkcje
+
+-   **Interaktywny Generator Selektorów:** Kliknij dowolny element, aby wygenerować precyzyjny selektor CSS.
+-   **Pełne Wsparcie dla Iframe:** Działa płynnie we wszystkich elementach `<iframe>` na stronie.
+-   **Interaktywne Kontrolki:** Dostosuj selektory za pomocą intuicyjnych suwaków i pól wyboru.
+-   **Wiele Trybów Selektorów:**
+    -   **Tryb Similar:** Generuje elastyczne selektory oparte na tagach, klasach i ID.
+    -   **Tryb Short:** Tworzy zwięzły selektor tylko dla ostatniego elementu w ścieżce.
+    -   **Tryb Single:** Generuje precyzyjne, oparte na indeksach selektory (`:nth-of-type`) do nawigacji po listach i złożonych strukturach.
+-   **Zaawansowana Funkcja Zamrażania (Freeze):** Dwa odrębne tryby do obsługi dynamicznych elementów.
+-   **Personalizacja Kolorów:** Zmień kolory podświetlenia i zaznaczenia według własnych preferencji.
+-   **Ukrywanie Elementów:** Tymczasowo ukrywaj elementy na stronie, aby oczyścić widok.
+
+---
+
+## Jak Używać
+
+1.  Kliknij ikonę rozszerzenia na pasku narzędzi Chrome, aby aktywować picker. Kursor zmieni się na celownik.
+2.  Przesuwaj mysz po stronie. Elementy pod kursorem będą podświetlane.
+3.  Kliknij wybrany element, aby go zaznaczyć.
+4.  Pojawi się panel kontrolny. Użyj suwaków i pól wyboru, aby dostosować wygenerowany selektor.
+5.  Użyj przycisków akcji (`KOPIUJ`, `UKRYJ` itp.), aby wykonać pożądaną operację.
+6.  Kliknij `SELECT`, aby ponownie wejść w tryb wybierania, lub `QUIT` (albo naciśnij `Esc`), aby zamknąć rozszerzenie.
+
+---
+
+## Opis Panelu i Trybów
+
+### Górny Pasek
+
+-   **Próbniki Kolorów:** Pierwszy (niebieski) próbnik zmienia kolor podświetlenia (hover), a drugi (czerwony) zmienia kolor zaznaczenia.
+-   **Przycisk ❄️ (Freeze):** Przełącza tryb **Zamrażania JS**.
+-   **Minimalizuj/Zamknij:** Minimalizuje panel lub zamyka rozszerzenie.
+
+### Wyświetlacz Selektora
+
+-   Pokazuje aktualnie wygenerowany selektor gotowy do użycia w filtrach (np. `##selektor`).
+-   Pole to jest edytowalne (`contenteditable`), więc możesz ręcznie wpisać lub wkleić selektor, aby zobaczyć jego podświetlenie na stronie.
+
+### Suwaki
+
+-   **Górny Suwak (Suwak Ścieżki):** Kontroluje głębokość selektora. Przesunięcie w lewo przesuwa się w górę drzewa DOM (zaznacza elementy nadrzędne).
+-   **Dolny Suwak (Suwak Atrybutów/Indeksu):** Jego funkcja zależy od trybu:
+    -   W **Trybie Similar**, dostosowuje specyficzność części selektora (np. od samego `tagu` do `tag.klasa` lub `#id`).
+    -   W **Trybie Single**, bezpośrednio zmienia indeks `:nth-of-type(n)` elementu aktualnie wskazywanego przez Suwak Ścieżki.
+
+### Pola Wyboru i Tryby
+
+-   **`Similar` (pole wyboru):**
+    -   Gdy **zaznaczone**, generuje elastyczne selektory oparte na atrybutach. Ten tryb świetnie nadaje się do znajdowania wielu elementów o podobnych cechach.
+-   **`Short` (pole wyboru):**
+    -   Działa tylko, gdy `Similar` jest zaznaczone.
+    -   Gdy **zaznaczone**, upraszcza selektor, aby celował tylko w ostatni element w bieżącej ścieżce, zamiast w cały łańcuch rodzic-dziecko.
+-   **`Tryb Single` (pole `Similar` odznaczone):**
+    -   Ten tryb generuje bardzo specyficzne, oparte na indeksach selektory (`tag:nth-of-type(n)`).
+    -   Został zaprojektowany z myślą o precyzji, zwłaszcza przy pracy z listami lub elementami-rodzeństwem, które nie mają unikalnych klas lub ID (lub mają zduplikowane ID).
+    -   Suwaki pozwalają na precyzyjną nawigację po drzewie DOM, poziom po poziomie i indeks po indeksie.
+
+---
+
+## Wyjaśnienie Funkcji Zamrażania (Freeze)
+
+Rozszerzenie oferuje dwa odrębne tryby „zamrażania” do obsługi dynamicznych elementów, które pojawiają się lub znikają w wyniku interakcji użytkownika. Tylko jeden tryb może być aktywny w danym momencie.
+
+### 1. Zamrażanie CSS (za pomocą klawisza 'z')
+
+-   **Cel:** Zablokowanie stanu wizualnego elementów, które pojawiają się przy użyciu CSS `:hover`, takich jak rozwijane menu.
+-   **Jak to działa:** Gdy najedziesz kursorem na element, który powoduje pojawienie się menu (np. `<li>`, które pokazuje `<ul>`), naciśnięcie klawisza **'z'** „zamrozi” to menu. Rozszerzenie robi to, pobierając `computedStyle` menu (jego dokładny rozmiar, pozycję i właściwości wyświetlania w danym momencie) i stosując go jako styl inline. Dzięki temu menu pozostaje widoczne nawet po odsunięciu kursora.
+-   **Jak używać:**
+    1.  Najedź kursorem na element, który powoduje pojawienie się menu.
+    2.  Gdy menu będzie widoczne, naciśnij klawisz **'z'**.
+    3.  Menu jest teraz zamrożone i możesz wchodzić w interakcję z jego elementami.
+    4.  Ponowne naciśnięcie **'z'** odmrozi menu i wyczyści bieżące zaznaczenie.
+-   **Ograniczenia:** Ta metoda jest najskuteczniejsza w przypadku menu kontrolowanych przez CSS. Może nie zamrozić poprawnie elementów animowanych przez bardzo złożony JavaScript, który ciągle zmienia właściwości `transform` lub `position`, ponieważ przechwytuje tylko pojedynczą migawkę stylu elementu.
+
+### 2. Zamrażanie JS (za pomocą ikony ❄️)
+
+-   **Cel:** Zablokowanie zdarzeń JavaScript, które powodują znikanie elementów, takich jak listenery `mouseout` czy `mouseleave`.
+-   **Jak to działa:** Po aktywacji ten tryb dodaje globalne listenery zdarzeń, które przechwytują i zatrzymują propagację kluczowych zdarzeń myszy (`mouseout`, `mouseleave`, `blur` itp.). Zapobiega to wykryciu przez skrypty strony, że odsunąłeś mysz, dzięki czemu dynamiczny element pozostaje widoczny.
+-   **Jak używać:**
+    1.  Kliknij ikonę **❄️** na panelu. Ikona stanie się aktywna.
+    2.  Najedź na element, aby pojawiło się dynamiczne menu/element. Powinno ono teraz pozostać widoczne.
+    3.  Kliknij ponownie ikonę **❄️**, aby wyłączyć listenery zdarzeń i wyczyścić bieżące zaznaczenie.
+-   **Ograniczenia:** Ten tryb jest potężny, ale może być inwazyjny. Blokując zdarzenia globalnie, może zakłócać inne funkcjonalności na stronie, gdy jest aktywny. Używaj go, gdy zamrażanie CSS (klawisz 'z') nie jest wystarczające.
