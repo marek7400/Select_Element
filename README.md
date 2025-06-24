@@ -37,6 +37,10 @@ add "Short" option.
 
 fix on some pages with wrong html menu (non-standard)
 
+# 2.5 Another change to the selection method, added mode for searching within an element and copying properties
+
+![2.5](images/2.5.png)
+
 ***********
 
 # Element Picker Extension
