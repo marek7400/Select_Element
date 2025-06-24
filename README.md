@@ -43,183 +43,148 @@ fix on some pages with wrong html menu (non-standard)
 
 ***********
 
-# Element Picker Extension
+# Element Picker & Selector Generator
 
-An advanced Chrome extension for selecting elements, generating robust CSS selectors, and interacting with complex web pages, including those with iframes and dynamic, JavaScript-driven menus.
-
-## Key Features
-
--   **Interactive Selector Generator:** Click on any element to generate a precise CSS selector.
--   **Full Iframe Support:** Works seamlessly across all `<iframe>` elements on a page.
--   **Interactive Controls:** Fine-tune selectors using intuitive sliders and checkboxes.
--   **Multiple Selector Modes:**
-    -   **Similar Mode:** Generates flexible selectors based on tags, classes, and IDs.
-    -   **Short Mode:** Creates a concise selector for only the last element in the path.
-    -   **Single Mode:** Generates precise, index-based selectors (`:nth-of-type`) for navigating lists and complex structures.
--   **Advanced Freeze Functionality:** Two distinct modes to handle dynamic elements.
--   **Color Customization:** Change the highlight and selection colors to your preference.
--   **Element Hiding:** Temporarily hide elements on the page to refine your view.
+This Chrome extension is an advanced tool for developers, testers, and power-users, designed to inspect web pages, select elements (even within iframes and shadow DOMs), and generate precise CSS selectors. It provides powerful modes for handling dynamic content and complex element structures.
 
 ---
 
-## How to Use
+## English
 
-1.  Click the extension icon in the Chrome toolbar to activate the picker. Your cursor will change to a crosshair.
-2.  Move your mouse over the page. Elements under the cursor will be highlighted.
-3.  Click on the desired element to select it.
-4.  The control panel will appear. Use the sliders and checkboxes to adjust the generated selector.
-5.  Use the action buttons (`COPY`, `HIDE`, etc.) to perform the desired operation.
-6.  Click `SELECT` to re-enter picking mode or `QUIT` (or press `Esc`) to close the extension.
+### Features
 
----
+- **Interactive Element Selection:** Simply click the extension icon to activate the picker and hover over elements on the page.
+- **Iframe & Shadow DOM Support:** Seamlessly works across frames and can inspect elements inside open Shadow DOMs.
+- **Advanced Selector Generation:** Fine-tune selectors with intuitive sliders.
+- **Powerful Modes:**
+    - **Similar Mode:** Find a common selector for multiple similar elements.
+    - **Inside Mode:** Traverse the DOM *inside* a selected container to pick a specific child.
+    - **Freeze Mode:** "Freeze" dynamic elements like hover-activated menus to make them selectable.
+- **Multiple Copy Options:** Copy the generated selector in various formats (ad-blocker filter, JavaScript, XPath, outerHTML, styles).
+- **Customizable Highlighting:** Change the colors for hover and selection highlighting.
 
-## Panel and Modes Explained
+### How to Use
 
-### Top Bar
+1.  Click the extension icon in your Chrome toolbar. The page will enter "picker mode," indicated by a crosshair cursor.
+2.  Move your mouse over the page. Elements will be highlighted as you hover.
+3.  Click on the element you want to select.
+4.  The picker will pause, and the control panel will appear, showing a generated selector for the clicked element.
+5.  Use the panel's controls to refine the selector, then copy it in your desired format.
 
--   **Color Swatches:** The first (blue) swatch changes the hover color, while the second (red) changes the selection color.
--   **❄️ Freeze Button:** Toggles the **JS Freeze** mode.
--   **Minimize/Quit:** Minimizes the panel or closes the extension.
+### Key Modes Explained
 
-### Selector Display
+#### Similar Mode
 
--   Shows the currently generated filter-ready selector (e.g., `##selector`).
--   This field is `contenteditable`, so you can manually type or paste a selector to see it highlighted on the page.
+This is the default mode after you select an element. It's designed to help you find a selector that matches not just the element you clicked, but also other elements that are structurally similar.
 
-### Sliders
+-   **Path Slider:** Moves up the DOM tree from the selected element. Dragging the slider changes the selection from the specific element you clicked to its parent, grandparent, and so on. This is useful for broadening the scope of your selector.
+-   **Attribute Slider:** Controls the specificity of the selector for the currently targeted element in the path. You can cycle through levels like:
+    -   Tag only (e.g., `div`)
+    -   Tag + ID (e.g., `div#main-content`)
+    -   Tag + Classes (e.g., `div.item.active`)
+    -   Tag + ID or Classes
+-   **Short Checkbox:** When checked, it generates a selector for only the last element in the path, rather than the full, more specific path from a higher-level parent.
 
--   **Top Slider (Path Slider):** Controls the selector's depth. Moving it to the left goes up the DOM tree (selects parent elements).
--   **Bottom Slider (Attribute/Index Slider):** Its function changes depending on the mode:
-    -   In **Similar Mode**, it adjusts the specificity of the selector parts (e.g., from just `tag` to `tag.class` or `#id`).
-    -   In **Single Mode**, it directly changes the `:nth-of-type(n)` index of the element currently targeted by the Path Slider.
+#### Inside Mode
 
-### Checkboxes and Modes
+This mode is for situations where you've selected a larger container element (like a product card) but want to target a specific item *inside* it (like the price or an "Add to Cart" button).
 
--   **`Similar` (checkbox):**
-    -   When **checked**, it generates flexible, attribute-based selectors. This mode is great for finding multiple elements that share similar characteristics.
--   **`Short` (checkbox):**
-    -   Only works when `Similar` is checked.
-    -   When **checked**, it simplifies the selector to only target the last element in the current path, instead of the full parent-child chain.
--   **`Single Mode` (`Similar` checkbox unchecked):**
-    -   This mode generates highly specific, index-based selectors (`tag:nth-of-type(n)`).
-    -   It is designed for precision, especially when dealing with lists or sibling elements that lack unique classes or IDs (or have duplicated IDs).
-    -   The sliders allow you to navigate the DOM tree precisely, level by level and index by index.
+1.  Click an element to select it.
+2.  In the control panel, check the **"Inside"** checkbox.
+3.  The initially selected element is now treated as a container.
+4.  The **Path Slider** now lets you walk through every single node (including text nodes) inside that container. This allows for extremely precise selection of child elements that might be hard to click directly.
 
----
+#### Freeze Mode
 
-## The Freeze Function Explained
+Web pages often have dynamic elements, like dropdown menus that only appear on hover and disappear as soon as you move your mouse away. Freeze Mode helps you capture these elusive elements.
 
-The extension offers two distinct "freeze" modes to handle dynamic elements that appear or disappear on user interaction. Only one mode can be active at a time.
+-   **JS Freeze (❄️ Button):** This is the powerful, site-wide option. Clicking the snowflake icon (❄️) in the panel's title bar blocks common JavaScript events like `mouseout` and `mouseleave` for the entire page. This forces menus and tooltips to stay open, allowing you to move your mouse and select them with the picker. Click the button again to disable it.
+-   **CSS Freeze ('z' Key):** This is a more targeted approach.
+    1.  Hover over an element (e.g., a "File" menu) to make its dropdown appear.
+    2.  While the dropdown is visible, press the `z` key.
+    3.  The extension captures the dropdown's current CSS styles (like `display: block`, `opacity: 1`) and applies them as inline styles. A striped overlay appears over the element to indicate it's "frozen."
+    4.  You can now move your mouse away to interact with the picker panel, and the dropdown will remain visible.
+    5.  Press `z` again to unfreeze it.
 
-### 1. CSS Freeze (via 'z' key)
+#### Copy Options
 
--   **Purpose:** To lock the visual state of elements that appear on CSS `:hover`, such as dropdown menus.
--   **How it works:** When you hover over an element that triggers a menu to appear (e.g., an `<li>` that shows a `<ul>`), pressing the **'z'** key will "freeze" that menu. The extension does this by getting the menu's `computedStyle` (its exact size, position, and display properties at that moment) and applying it as an inline style. This keeps the menu visible even after you move your cursor away.
--   **How to use:**
-    1.  Hover over the element that makes the menu appear.
-    2.  Once the menu is visible, press the **'z'** key.
-    3.  The menu is now frozen, and you can interact with its items.
-    4.  Pressing **'z'** again will unfreeze the menu and clear the current selection.
--   **Limitations:** This method is most effective for menus controlled by CSS. It may not correctly freeze elements animated by very complex JavaScript that continuously alters transform or position properties, as it only captures a single snapshot of the element's style.
+The control panel allows you to copy your findings in several useful formats:
 
-### 2. JS Freeze (via ❄️ icon)
-
--   **Purpose:** To block JavaScript events that cause elements to disappear, such as `mouseout` or `mouseleave` listeners.
--   **How it works:** When activated, this mode adds global event listeners that capture and stop the propagation of key mouse events (`mouseout`, `mouseleave`, `blur`, etc.). This prevents the page's scripts from detecting that you have moved the mouse away, thus keeping the dynamic element visible.
--   **How to use:**
-    1.  Click the **❄️** icon on the panel. The icon will become active.
-    2.  Hover over the element to make the dynamic menu/element appear. It should now remain visible.
-    3.  Click the **❄️** icon again to disable the event listeners and clear the current selection.
--   **Limitations:** This mode is powerful but can be disruptive. By blocking events globally, it may interfere with other functionalities on the page while active. Use it when the CSS freeze ('z' key) is not sufficient.
-
----
----
-
-# Rozszerzenie Element Picker
-
-Zaawansowane rozszerzenie do przeglądarki Chrome służące do zaznaczania elementów, generowania solidnych selektorów CSS i interakcji ze złożonymi stronami internetowymi, w tym z elementami `<iframe>` oraz dynamicznymi menu opartymi na JavaScript.
-
-## Główne Funkcje
-
--   **Interaktywny Generator Selektorów:** Kliknij dowolny element, aby wygenerować precyzyjny selektor CSS.
--   **Pełne Wsparcie dla Iframe:** Działa płynnie we wszystkich elementach `<iframe>` na stronie.
--   **Interaktywne Kontrolki:** Dostosuj selektory za pomocą intuicyjnych suwaków i pól wyboru.
--   **Wiele Trybów Selektorów:**
-    -   **Tryb Similar:** Generuje elastyczne selektory oparte na tagach, klasach i ID.
-    -   **Tryb Short:** Tworzy zwięzły selektor tylko dla ostatniego elementu w ścieżce.
-    -   **Tryb Single:** Generuje precyzyjne, oparte na indeksach selektory (`:nth-of-type`) do nawigacji po listach i złożonych strukturach.
--   **Zaawansowana Funkcja Zamrażania (Freeze):** Dwa odrębne tryby do obsługi dynamicznych elementów.
--   **Personalizacja Kolorów:** Zmień kolory podświetlenia i zaznaczenia według własnych preferencji.
--   **Ukrywanie Elementów:** Tymczasowo ukrywaj elementy na stronie, aby oczyścić widok.
+-   **##:** Standard cosmetic filter syntax used by ad-blockers like uBlock Origin (`domain.com##selector`).
+-   **JS:** A JavaScript snippet to select the element: `document.querySelector("selector")`.
+-   **o.HTML:** The complete `outerHTML` of the selected element, including special handling for rendering the contents of a Shadow Root.
+-   **Element:** Copies the full HTML of the element (same as o.HTML).
+-   **Styles:** A formatted string of all matched CSS rules applied to the element, mimicking the "Styles" tab in browser DevTools.
+-   **XPath:** A relative XPath expression for the element.
+-   **F.XPath:** The full, absolute XPath from the root of the document.
 
 ---
 
-## Jak Używać
+## Polski
 
-1.  Kliknij ikonę rozszerzenia na pasku narzędzi Chrome, aby aktywować picker. Kursor zmieni się na celownik.
-2.  Przesuwaj mysz po stronie. Elementy pod kursorem będą podświetlane.
-3.  Kliknij wybrany element, aby go zaznaczyć.
-4.  Pojawi się panel kontrolny. Użyj suwaków i pól wyboru, aby dostosować wygenerowany selektor.
-5.  Użyj przycisków akcji (`KOPIUJ`, `UKRYJ` itp.), aby wykonać pożądaną operację.
-6.  Kliknij `SELECT`, aby ponownie wejść w tryb wybierania, lub `QUIT` (albo naciśnij `Esc`), aby zamknąć rozszerzenie.
+### Funkcje
 
----
+-   **Interaktywne Wybieranie Elementów:** Po prostu kliknij ikonę rozszerzenia, aby aktywować tryb próbnika i najeżdżaj na elementy na stronie.
+-   **Wsparcie dla Iframe i Shadow DOM:** Działa płynnie wewnątrz ramek (iframe) i potrafi inspekcjonować elementy w otwartym Shadow DOM.
+-   **Zaawansowane Generowanie Selektorów:** Precyzyjnie dostosuj selektory za pomocą intuicyjnych suwaków.
+-   **Potężne Tryby Pracy:**
+    -   **Tryb Similar (Podobne):** Znajduje wspólny selektor dla wielu podobnych elementów.
+    -   **Tryb Inside (Wewnętrzny):** Umożliwia nawigację wewnątrz wybranego kontenera, aby wybrać konkretny element podrzędny.
+    -   **Tryb Freeze (Zamrażanie):** "Zamraża" dynamiczne elementy, takie jak menu aktywowane najechaniem myszy, aby umożliwić ich wybranie.
+-   **Wiele Opcji Kopiowania:** Skopiuj wygenerowany selektor w różnych formatach (filtr dla ad-blockerów, JavaScript, XPath, outerHTML, style).
+-   **Konfigurowalne Podświetlenie:** Zmień kolory podświetlenia dla najechania myszą i zaznaczenia.
 
-## Opis Panelu i Trybów
+### Jak Używać
 
-### Górny Pasek
+1.  Kliknij ikonę rozszerzenia na pasku narzędzi Chrome. Strona przejdzie w "tryb próbnika", co zasygnalizuje kursor w kształcie krzyżyka.
+2.  Przesuwaj mysz po stronie. Elementy będą podświetlane, gdy na nie najedziesz.
+3.  Kliknij element, który chcesz wybrać.
+4.  Próbnik zostanie wstrzymany, a na ekranie pojawi się panel kontrolny, pokazujący wygenerowany selektor dla klikniętego elementu.
+5.  Użyj narzędzi w panelu, aby dopracować selektor, a następnie skopiuj go w wybranym formacie.
 
--   **Próbniki Kolorów:** Pierwszy (niebieski) próbnik zmienia kolor podświetlenia (hover), a drugi (czerwony) zmienia kolor zaznaczenia.
--   **Przycisk ❄️ (Freeze):** Przełącza tryb **Zamrażania JS**.
--   **Minimalizuj/Zamknij:** Minimalizuje panel lub zamyka rozszerzenie.
+### Wyjaśnienie Kluczowych Trybów
 
-### Wyświetlacz Selektora
+#### Tryb Similar (Podobne)
 
--   Pokazuje aktualnie wygenerowany selektor gotowy do użycia w filtrach (np. `##selektor`).
--   Pole to jest edytowalne (`contenteditable`), więc możesz ręcznie wpisać lub wkleić selektor, aby zobaczyć jego podświetlenie na stronie.
+To domyślny tryb po wybraniu elementu. Został zaprojektowany, aby pomóc Ci znaleźć selektor pasujący nie tylko do klikniętego elementu, ale także do innych, które są strukturalnie podobne.
 
-### Suwaki
+-   **Suwak Ścieżki (Path Slider):** Porusza się w górę drzewa DOM od wybranego elementu. Przesunięcie suwaka zmienia zaznaczenie z konkretnego klikniętego elementu na jego rodzica, dziadka itd. Jest to przydatne do rozszerzania zasięgu selektora.
+-   **Suwak Atrybutów (Attribute Slider):** Kontroluje specyficzność selektora dla aktualnie wskazywanego elementu w ścieżce. Możesz przełączać się między poziomami, takimi jak:
+    -   Tylko tag (np. `div`)
+    -   Tag + ID (np. `div#main-content`)
+    -   Tag + Klasy (np. `div.item.active`)
+    -   Tag + ID lub Klasy
+-   **Checkbox "Short":** Gdy jest zaznaczony, generuje selektor tylko dla ostatniego elementu w ścieżce, zamiast pełnej, bardziej szczegółowej ścieżki od elementu nadrzędnego.
 
--   **Górny Suwak (Suwak Ścieżki):** Kontroluje głębokość selektora. Przesunięcie w lewo przesuwa się w górę drzewa DOM (zaznacza elementy nadrzędne).
--   **Dolny Suwak (Suwak Atrybutów/Indeksu):** Jego funkcja zależy od trybu:
-    -   W **Trybie Similar**, dostosowuje specyficzność części selektora (np. od samego `tagu` do `tag.klasa` lub `#id`).
-    -   W **Trybie Single**, bezpośrednio zmienia indeks `:nth-of-type(n)` elementu aktualnie wskazywanego przez Suwak Ścieżki.
+#### Tryb Inside (Wewnętrzny)
 
-### Pola Wyboru i Tryby
+Ten tryb jest przeznaczony do sytuacji, w których wybrałeś większy kontener (np. kartę produktu), ale chcesz wskazać konkretny element *w jego wnętrzu* (np. cenę lub przycisk "Dodaj do koszyka").
 
--   **`Similar` (pole wyboru):**
-    -   Gdy **zaznaczone**, generuje elastyczne selektory oparte na atrybutach. Ten tryb świetnie nadaje się do znajdowania wielu elementów o podobnych cechach.
--   **`Short` (pole wyboru):**
-    -   Działa tylko, gdy `Similar` jest zaznaczone.
-    -   Gdy **zaznaczone**, upraszcza selektor, aby celował tylko w ostatni element w bieżącej ścieżce, zamiast w cały łańcuch rodzic-dziecko.
--   **`Tryb Single` (pole `Similar` odznaczone):**
-    -   Ten tryb generuje bardzo specyficzne, oparte na indeksach selektory (`tag:nth-of-type(n)`).
-    -   Został zaprojektowany z myślą o precyzji, zwłaszcza przy pracy z listami lub elementami-rodzeństwem, które nie mają unikalnych klas lub ID (lub mają zduplikowane ID).
-    -   Suwaki pozwalają na precyzyjną nawigację po drzewie DOM, poziom po poziomie i indeks po indeksie.
+1.  Kliknij element, aby go wybrać.
+2.  W panelu kontrolnym zaznacz checkbox **"Inside"**.
+3.  Początkowo wybrany element jest teraz traktowany jako kontener.
+4.  **Suwak Ścieżki** pozwala teraz przechodzić przez każdy pojedynczy węzeł (w tym węzły tekstowe) wewnątrz tego kontenera. Umożliwia to niezwykle precyzyjne wybranie elementów podrzędnych, które mogłyby być trudne do kliknięcia bezpośrednio.
 
----
+#### Tryb Freeze (Zamrażanie)
 
-## Wyjaśnienie Funkcji Zamrażania (Freeze)
+Strony internetowe często zawierają dynamiczne elementy, takie jak rozwijane menu, które pojawiają się tylko po najechaniu myszą i znikają, gdy tylko ją odsuniesz. Tryb Zamrażania pomaga uchwycić te ulotne elementy.
 
-Rozszerzenie oferuje dwa odrębne tryby „zamrażania” do obsługi dynamicznych elementów, które pojawiają się lub znikają w wyniku interakcji użytkownika. Tylko jeden tryb może być aktywny w danym momencie.
+-   **Zamrażanie JS (Przycisk ❄️):** Jest to potężna opcja działająca na całą stronę. Kliknięcie ikony płatka śniegu (❄️) na pasku tytułowym panelu blokuje powszechne zdarzenia JavaScript, takie jak `mouseout` i `mouseleave` dla całej strony. Zmusza to menu i podpowiedzi do pozostania otwartymi, umożliwiając Ci przesunięcie myszy i wybranie ich za pomocą próbnika. Kliknij przycisk ponownie, aby go wyłączyć.
+-   **Zamrażanie CSS (Klawisz 'z'):** Jest to bardziej ukierunkowane podejście.
+    1.  Najedź na element (np. menu "Plik"), aby pojawiło się jego rozwijane menu.
+    2.  Gdy menu jest widoczne, naciśnij klawisz `z`.
+    3.  Rozszerzenie przechwytuje aktualne style CSS menu (takie jak `display: block`, `opacity: 1`) i stosuje je jako style inline. Na elemencie pojawi się pasiasta nakładka, aby zasygnalizować, że jest "zamrożony".
+    4.  Możesz teraz odsunąć mysz, aby wejść w interakcję z panelem próbnika, a menu pozostanie widoczne.
+    5.  Naciśnij `z` ponownie, aby je odblokować.
 
-### 1. Zamrażanie CSS (za pomocą klawisza 'z')
+#### Opcje Kopiowania
 
--   **Cel:** Zablokowanie stanu wizualnego elementów, które pojawiają się przy użyciu CSS `:hover`, takich jak rozwijane menu.
--   **Jak to działa:** Gdy najedziesz kursorem na element, który powoduje pojawienie się menu (np. `<li>`, które pokazuje `<ul>`), naciśnięcie klawisza **'z'** „zamrozi” to menu. Rozszerzenie robi to, pobierając `computedStyle` menu (jego dokładny rozmiar, pozycję i właściwości wyświetlania w danym momencie) i stosując go jako styl inline. Dzięki temu menu pozostaje widoczne nawet po odsunięciu kursora.
--   **Jak używać:**
-    1.  Najedź kursorem na element, który powoduje pojawienie się menu.
-    2.  Gdy menu będzie widoczne, naciśnij klawisz **'z'**.
-    3.  Menu jest teraz zamrożone i możesz wchodzić w interakcję z jego elementami.
-    4.  Ponowne naciśnięcie **'z'** odmrozi menu i wyczyści bieżące zaznaczenie.
--   **Ograniczenia:** Ta metoda jest najskuteczniejsza w przypadku menu kontrolowanych przez CSS. Może nie zamrozić poprawnie elementów animowanych przez bardzo złożony JavaScript, który ciągle zmienia właściwości `transform` lub `position`, ponieważ przechwytuje tylko pojedynczą migawkę stylu elementu.
+Panel kontrolny pozwala skopiować wyniki w kilku przydatnych formatach:
 
-### 2. Zamrażanie JS (za pomocą ikony ❄️)
-
--   **Cel:** Zablokowanie zdarzeń JavaScript, które powodują znikanie elementów, takich jak listenery `mouseout` czy `mouseleave`.
--   **Jak to działa:** Po aktywacji ten tryb dodaje globalne listenery zdarzeń, które przechwytują i zatrzymują propagację kluczowych zdarzeń myszy (`mouseout`, `mouseleave`, `blur` itp.). Zapobiega to wykryciu przez skrypty strony, że odsunąłeś mysz, dzięki czemu dynamiczny element pozostaje widoczny.
--   **Jak używać:**
-    1.  Kliknij ikonę **❄️** na panelu. Ikona stanie się aktywna.
-    2.  Najedź na element, aby pojawiło się dynamiczne menu/element. Powinno ono teraz pozostać widoczne.
-    3.  Kliknij ponownie ikonę **❄️**, aby wyłączyć listenery zdarzeń i wyczyścić bieżące zaznaczenie.
--   **Ograniczenia:** Ten tryb jest potężny, ale może być inwazyjny. Blokując zdarzenia globalnie, może zakłócać inne funkcjonalności na stronie, gdy jest aktywny. Używaj go, gdy zamrażanie CSS (klawisz 'z') nie jest wystarczające.
+-   **##:** Standardowa składnia filtrów kosmetycznych używana przez ad-blockery, takie jak uBlock Origin (`domena.com##selektor`).
+-   **JS:** Fragment kodu JavaScript do wybrania elementu: `document.querySelector("selektor")`.
+-   **o.HTML:** Kompletny `outerHTML` wybranego elementu, w tym specjalna obsługa renderowania zawartości Shadow Root.
+-   **Element:** Kopiuje pełny kod HTML elementu (to samo co o.HTML).
+-   **Styles:** Sformatowany ciąg wszystkich dopasowanych reguł CSS zastosowanych do elementu, naśladujący zakładkę "Style" w narzędziach deweloperskich przeglądarki.
+-   **XPath:** Względne wyrażenie XPath dla elementu.
+-   **F.XPath:** Pełne, bezwzględne wyrażenie XPath od korzenia dokumentu.
