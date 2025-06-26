@@ -1,4 +1,4 @@
-# Select Element - Chrome extension.
+# Select Element - Chrome extension. (STILL IN PROGRESS)
 Select element on page, show info class ID root, hide element, copy selector to clipboard.
 <br>
 <br>
