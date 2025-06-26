@@ -164,6 +164,32 @@ It has two modes:
     *   `UNDO`: Reverts the last `HIDE` action.
     *   `SHOW`: Reverts all `HIDE` actions performed in the current session.
     *   `COPY`: Copies the selector to the clipboard in the chosen format.
+ 
+**Feature Name:** Manual Selector Input
+
+**Purpose:** To allow the user to manually type or paste a CSS selector directly into the extension's panel and then treat the found element as if it were clicked by the mouse in picker mode.
+
+**How it works:**
+
+1.  The user activates the extension.
+2.  In the panel's top text area (`#ubo-picker-filter-display`), the user can type any valid CSS selector.
+3.  After typing the selector, the user presses the `Enter` key.
+
+**Behavior upon pressing `Enter`:**
+
+*   **Success (element found):**
+    *   The extension searches the page for the first element that matches the provided selector.
+    *   If an element is found, the extension enters the "paused" state, exactly as it would after a mouse click on an element.
+    *   A full DOM path (`fullSelectorPath`) to this element is generated.
+    *   All panel controls (the DOM traversal slider, `Inside`, `Similar`, `Short` checkboxes) become active and operate in the context of the found element, allowing for further manipulation and final selector generation.
+    *   The selection highlight correctly follows the element on page scroll.
+
+*   **No Matches:**
+    *   If the provided selector is syntactically correct but does not match any element on the page, the text area is highlighted with an orange border and a `(0 matches)` message is displayed.
+    *   The extension returns to the active picking mode (crosshair cursor), allowing the user to select an element with the mouse again.
+
+*   **Invalid Selector:**
+    *   If the entered text is not a valid CSS selector (syntax error), the text area is highlighted with a red border to signal the error. No further action is taken.
 
 ---
 
@@ -273,3 +299,31 @@ Posiada ona dwa tryby:
     *   `UNDO`: Cofa ostatnią akcję `HIDE`.
     *   `SHOW`: Cofa wszystkie akcje `HIDE` wykonane w bieżącej sesji.
     *   `COPY`: Kopiuje selektor do schowka w wybranym formacie.
+ 
+ 
+**Nazwa funkcji:** Ręczne Wprowadzanie Selektora
+
+**Cel:** Umożliwienie użytkownikowi ręcznego wpisania lub wklejenia selektora CSS bezpośrednio do panelu rozszerzenia, a następnie potraktowanie znalezionego elementu tak, jakby został on kliknięty myszą w trybie wyboru.
+
+**Jak to działa:**
+
+1.  Użytkownik aktywuje rozszerzenie.
+2.  W panelu, w górnym polu tekstowym (`#ubo-picker-filter-display`), użytkownik może wpisać dowolny, poprawny selektor CSS.
+3.  Po wpisaniu selektora, użytkownik naciska klawisz `Enter`.
+
+**Scenariusze działania po naciśnięciu `Enter`:**
+
+*   **Sukces (znaleziono element):**
+    *   Rozszerzenie wyszukuje na stronie pierwszy element, który pasuje do podanego selektora.
+    *   Jeśli element zostanie znaleziony, rozszerzenie przechodzi w stan "wstrzymania" (`paused`), dokładnie tak, jak po kliknięciu elementu myszą.
+    *   Generowana jest pełna ścieżka (`fullSelectorPath`) do tego elementu.
+    *   Wszystkie kontrolki panelu (suwak do nawigacji w drzewie DOM, checkboxy `Inside`, `Similar`, `Short`) stają się aktywne i działają w kontekście znalezionego elementu, pozwalając na dalszą manipulację i generowanie docelowego selektora.
+    *   Podświetlenie selekcji poprawnie reaguje na przewijanie strony.
+
+*   **Brak dopasowań:**
+    *   Jeśli podany selektor jest poprawny składniowo, ale nie znajduje żadnego elementu na stronie, pole tekstowe zostaje podświetlone na pomarańczowo i wyświetlony zostaje komunikat `(0 matches)`.
+    *   Rozszerzenie powraca do trybu aktywnego wyboru (kursor w kształcie krzyżyka), umożliwiając ponowny wybór elementu myszą.
+
+*   **Nieprawidłowy selektor:**
+    *   Jeśli wpisany tekst nie jest prawidłowym selektorem CSS (błąd składni), pole tekstowe zostaje podświetlone na czerwono, sygnalizując błąd. Dalsze akcje nie są podejmowane.
+    *   
