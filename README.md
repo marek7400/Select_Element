@@ -59,11 +59,7 @@ Simplified logic of the Up and DOWN modes.
 <br>
 <br>
 <br>
-<br>
-<br>
-<br>
 ***
-
 # Select Element
 
 **Select Element** is a powerful browser extension for developers, testers, and content creators. It provides an advanced interface for selecting web page elements, generating precise CSS selectors, and interacting with them in various ways. Its key strength lies in its ability to work seamlessly across iframes and handle dynamic, hard-to-click elements.
