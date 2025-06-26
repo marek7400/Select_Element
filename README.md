@@ -55,8 +55,13 @@ Simplified logic of the Up and DOWN modes.
 <br>
 ![freeze2](images/freeze2.png)    
 
-# v2.7 add Manual Selector Input
-
+# v2.7 add Manual Selector Input  
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
 ***
 
 # Select Element
